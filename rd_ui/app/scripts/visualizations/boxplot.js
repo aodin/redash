@@ -34,14 +34,14 @@
             while (d[--j] > q3 + iqr);
             return [i, j];
           };
-        };
+        }
 
         $scope.$watch('[queryResult && queryResult.getData(), visualization.options]', function () {
           
           var data = $scope.queryResult.getData();
           var parentWidth = d3.select(elm[0].parentNode).node().getBoundingClientRect().width;
           var margin = {top: 10, right: 50, bottom: 40, left: 50, inner: 25},
-              width = parentWidth - margin.right - margin.left
+              width = parentWidth - margin.right - margin.left,
               height = 500 - margin.top - margin.bottom;
 
           var min = Infinity,
@@ -55,14 +55,15 @@
           var columns = $scope.queryResult.columnNames;
           var xscale = d3.scale.ordinal()
             .domain(columns)
-            .rangeBands([0, parentWidth-margin.left-margin.right]);
+            .rangeBands([0, parentWidth - margin.left - margin.right]);
 
+          var boxWidth;
           if (columns.length > 1){
-            boxWidth = Math.min(xscale(columns[1]),120.0);
+            boxWidth = Math.min(xscale(columns[1]), 120.0);
           } else {
-            boxWidth=120.0;
-          };
-          margin.inner = boxWidth/3.0;
+            boxWidth = 120.0;
+          }
+          margin.inner = boxWidth / 3.0;
 
           _.each(columns, function(column, i){
             d = mydata[i] = [];
@@ -75,92 +76,92 @@
           });
 
           var yscale = d3.scale.linear()
-            .domain([min*0.99,max*1.01])
+            .domain([min * 0.99, max * 1.01])
             .range([height, 0]);
 
           var chart = d3.box()
               .whiskers(iqr(1.5))
-              .width(boxWidth-2*margin.inner)
+              .width(boxWidth - 2 * margin.inner)
               .height(height)
-              .domain([min*0.99,max*1.01]);   
+              .domain([min * 0.99, max * 1.01]);
+
           var xAxis = d3.svg.axis()
             .scale(xscale)
-            .orient("bottom");
-
+            .orient('bottom');
 
           var yAxis = d3.svg.axis()
             .scale(yscale)
-            .orient("left");
+            .orient('left');
 
           var xLines = d3.svg.axis()
             .scale(xscale)
             .tickSize(height)
-            .orient("bottom");
+            .orient('bottom');
 
           var yLines = d3.svg.axis()
             .scale(yscale)
             .tickSize(width)
-            .orient("right");
+            .orient('right');
 
           var barOffset = function(i){
-            return xscale(columns[i]) + (xscale(columns[1]) - margin.inner)/2.0;
+            return xscale(columns[i]) + (xscale(columns[1]) - margin.inner) / 2.0;
           };
 
-          d3.select(elm[0]).selectAll("svg").remove();
+          d3.select(elm[0]).selectAll('svg').remove();
 
           var plot = d3.select(elm[0])
-            .append("svg")
-              .attr("width",parentWidth)
-              .attr("height",height + margin.bottom + margin.top)
-            .append("g")
-              .attr("width",parentWidth-margin.left-margin.right)
-              .attr("transform", "translate(" + margin.left + "," + margin.top + ")")
+            .append('svg')
+              .attr('width',parentWidth)
+              .attr('height',height + margin.bottom + margin.top)
+            .append('g')
+              .attr('width',parentWidth-margin.left-margin.right)
+              .attr('transform', 'translate(' + margin.left + ',' + margin.top + ')');
 
-          d3.select("svg").append("text")
-              .attr("class", "box")
-              .attr("x", parentWidth/2.0)
-              .attr("text-anchor", "middle")
-              .attr("y", height+margin.bottom)
-              .text(xAxisLabel)
+          d3.select('svg').append('text')
+              .attr('class', 'box')
+              .attr('x', parentWidth/2.0)
+              .attr('text-anchor', 'middle')
+              .attr('y', height+margin.bottom)
+              .text(xAxisLabel);
 
-          d3.select("svg").append("text")
-              .attr("class", "box")
-              .attr("transform","translate(10,"+(height+margin.top+margin.bottom)/2.0+")rotate(-90)")
-              .attr("text-anchor", "middle")
-              .text(yAxisLabel)
+          d3.select('svg').append('text')
+              .attr('class', 'box')
+              .attr('transform','translate(10,' + (height + margin.top + margin.bottom) / 2.0 + ')rotate(-90)')
+              .attr('text-anchor', 'middle')
+              .text(yAxisLabel);
 
-          plot.append("rect")
-              .attr("class", "grid-background")
-              .attr("width", width)
-              .attr("height", height); 
+          plot.append('rect')
+              .attr('class', 'grid-background')
+              .attr('width', width)
+              .attr('height', height);
 
-          plot.append("g")
-              .attr("class","grid")
-              .call(yLines)
+          plot.append('g')
+              .attr('class','grid')
+              .call(yLines);
 
-          plot.append("g")
-              .attr("class","grid")
-              .call(xLines)
+          plot.append('g')
+              .attr('class', 'grid')
+              .call(xLines);
 
-          plot.append("g")
-              .attr("class", "x axis")
-              .attr("transform", "translate(0," + height + ")")
+          plot.append('g')
+              .attr('class', 'x axis')
+              .attr('transform', 'translate(0,' + height + ')')
               .call(xAxis);
 
-          plot.append("g")
-              .attr("class", "y axis")
+          plot.append('g')
+              .attr('class', 'y axis')
               .call(yAxis);
 
-          plot.selectAll(".box").data(mydata)
-            .enter().append("g")
-              .attr("class", "box")
-              .attr("width", boxWidth)
-              .attr("height", height)
-              .attr("transform", function(d,i) { return "translate(" + barOffset(i) + "," + 0 + ")"; } )
+          plot.selectAll('.box').data(mydata)
+            .enter().append('g')
+              .attr('class', 'box')
+              .attr('width', boxWidth)
+              .attr('height', height)
+              .attr('transform', function(d,i) { return 'translate(' + barOffset(i) + ',' + 0 + ')'; } )
               .call(chart); 
         }, true);
       }
-    }
+    };
   });
 
   module.directive('boxplotEditor', function() {
