@@ -1,13 +1,36 @@
 <div class="form-horizontal">
+  <div class="form-group col-lg-10">
+    <label class="control-label">X Column</label>
+    <ui-select name="xAxisColumn" ng-model="form.xAxisColumn">
+      <ui-select-match placeholder="Choose column...">{{$select.selected}}</ui-select-match>
+      <ui-select-choices repeat="column in columnNames | remove:form.yAxisColumns">
+        <span ng-bind-html="column | highlight: $select.search"></span><span> </span>
+        <small class="text-muted" ng-bind="columns[column].type"></small>
+      </ui-select-choices>
+    </ui-select>
+  </div>
+
+  <div class="form-group col-lg-10">
+    <label class="control-label">Y Column</label>
+    <ui-select name="yAxisColumn" ng-model="form.yAxisColumn">
+      <ui-select-match placeholder="Choose column...">{{$select.selected}}</ui-select-match>
+      <ui-select-choices repeat="column in columnNames | remove:form.xAxisColumns">
+        <span ng-bind-html="column | highlight: $select.search"></span><span> </span>
+        <small class="text-muted" ng-bind="columns[column].type"></small>
+      </ui-select-choices>
+    </ui-select>
+
+  </div>
+
   <div class="form-group">
-    <label class="col-lg-6">X Axis Label</label>
+    <label class="col-lg-4">X Axis Label</label>
     <div class="col-lg-6">
       <input type="text" ng-model="visualization.options.xAxisLabel" class="form-control"></input>
     </div>
   </div>
 
   <div class="form-group">
-    <label class="col-lg-6">Y Axis Label</label>
+    <label class="col-lg-4">Y Axis Label</label>
     <div class="col-lg-6">
       <input type="text" ng-model="visualization.options.yAxisLabel" class="form-control"></input>
     </div>
