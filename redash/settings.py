@@ -91,6 +91,10 @@ SAML_METADATA_URL = os.environ.get("REDASH_SAML_METADATA_URL", "")
 SAML_LOGIN_ENABLED = SAML_METADATA_URL != ""
 SAML_CALLBACK_SERVER_NAME = os.environ.get("REDASH_SAML_CALLBACK_SERVER_NAME", "")
 
+SRG_OAUTH2_URL = os.environ.get("SRG_OAUTH2_URL", "")
+SRG_CLIENT_ID = os.environ.get("SRG_CLIENT_ID", "")
+SRG_CLIENT_SECRET = os.environ.get("SRG_CLIENT_SECRET", "")
+
 # Enables the use of an externally-provided and trusted remote user via an HTTP
 # header.  The "user" must be an email address.
 #

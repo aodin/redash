@@ -8,7 +8,7 @@ from flask import redirect, request, jsonify, url_for
 
 from redash import models, settings
 from redash.authentication.org_resolving import current_org
-from redash.authentication import google_oauth, saml_auth, remote_user_auth
+from redash.authentication import srg_oauth, google_oauth, saml_auth, remote_user_auth
 from redash.tasks import record_event
 
 login_manager = LoginManager()
@@ -16,12 +16,14 @@ logger = logging.getLogger('authentication')
 
 
 def get_login_url(external=False, next="/"):
-    if settings.MULTI_ORG:
-        login_url = url_for('redash.login', org_slug=current_org.slug, next=next, _external=external)
-    else:
-        login_url = url_for('redash.login', next=next, _external=external)
+    return url_for('srg_oauth.authorize', next=next, _external=external)
 
-    return login_url
+    # if settings.MULTI_ORG:
+    #     login_url = url_for('redash.login', org_slug=current_org.slug, next=next, _external=external)
+    # else:
+    #     login_url = url_for('redash.login', next=next, _external=external)
+
+    # return login_url
 
 
 def sign(key, path, expires):
@@ -141,6 +143,7 @@ def setup_authentication(app):
     login_manager.anonymous_user = models.AnonymousUser
 
     app.secret_key = settings.COOKIE_SECRET
+    app.register_blueprint(srg_oauth.blueprint)
     app.register_blueprint(google_oauth.blueprint)
     app.register_blueprint(saml_auth.blueprint)
     app.register_blueprint(remote_user_auth.blueprint)
